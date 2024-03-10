@@ -36,7 +36,8 @@
 </head>
 <body>
   <div class="form-container">
-    <form action="cardio.jsp" method="post">
+    <form action="cardio.jsp" method="post"> <!-- Change the action attribute to the appropriate URL so that its sends the form data -->
+      
       <textarea name="content" placeholder="Write your post here..."></textarea>
       <button type="submit">Post</button>
     </form>

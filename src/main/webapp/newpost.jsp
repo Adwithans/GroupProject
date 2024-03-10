@@ -53,7 +53,7 @@
 </head>
 <body>
   <div class="form-container">
-    <form action="cardio.jsp" method="post">
+    <form action="SubmitPostServlet" method="post">
       <div>Please fill in the details of your post:</div>
       <input type="text" name="title" placeholder="Post title" required />
       <input type="text" name="city" placeholder="City" required />

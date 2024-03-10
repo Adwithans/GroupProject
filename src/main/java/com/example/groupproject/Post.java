@@ -1,47 +1,31 @@
 package com.example.groupproject;
+
 import java.time.LocalDate;
-import java.util.*;
+
 public class Post {
+    private int id;
+    private String title;
+    private String content;
+    private String city;
+    private String username;
+    private LocalDate postingDate;
 
-    private int upvotes;
-    private String description;
-    private ArrayList <String> comments;
-    private final String user;
-    private final String city;
-
-    LocalDate postingDate;
-    public Post(String Desc, String city, String user){
-        this.postingDate = LocalDate.now();
-        this.description = Desc;
+    // Constructor
+    public Post(int id, String title, String content, String city, String username) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
         this.city = city;
-        this.user = user;
+        this.username = username;
+        this.postingDate = LocalDate.now(); // Assuming posting date is set to the current date
     }
 
-    public int getUpvotes() {
-        return upvotes;
-    }
+    
+    public String getTitle() { return title; }
+    public String getContent() { return content; }
+    public String getCity() { return city; }
+    public String getUsername() { return username; }
+    public LocalDate getPostingDate() { return postingDate; }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public ArrayList<String> getComments() {
-        return comments;
-    }
-
-    public String getUser() {
-        return user;
-    }
-    public String getCity() {
-        return city;
-    }
-    public LocalDate getPostingDate() {
-        return postingDate;
-    }
-    public void Addcomment(String comment){
-        this.comments.add(comment);
-    }
-    public void increaseUpvotes(){
-        upvotes +=1;
-    }
+    
 }

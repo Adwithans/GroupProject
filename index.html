@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Example SMART App</title>
+    <script src="https://cdn.jsdelivr.net/npm/fhirclient/build/fhir-client.js"></script>
+    <style>
+        #output {
+            font-family: Monaco, monospace;
+            white-space: pre;
+            font-size: 13px;
+            height: 60vh;
+            overflow: scroll;
+            border: 1px solid #CCC;
+        }
+    </style>
+</head>
+<body>
+<div id="output"></div>
+<script type="text/javascript">
+
+    function display(data) {
+        const output = document.getElementById("output");
+        output.innerHTML = ''; // Clear existing content
+
+        // Check if data is an error
+        if (data instanceof Error) {
+            output.innerText = String(data);
+            return;
+        }
+
+        // Extract and display singular values from each Observation resource
+        const observations = data.entry.map(entry => entry.resource);
+        observations.forEach(observation => {
+            // Extract observation ID
+            const observationId = observation.id || "N/A";
+
+            // Extract status
+            const status = observation.status ? observation.status : "N/A";
+
+            // Extract category
+            let category = "N/A";
+            if (observation.category && observation.category[0] && observation.category[0].coding && observation.category[0].coding[0] && observation.category[0].coding[0].code) {
+                category = observation.category[0].coding[0].code;
+            }
+
+            // Extract observation notes
+            let notes = "N/A";
+            if (observation.note && observation.note[0] && observation.note[0].text) {
+                notes = observation.note[0].text;
+            }
+
+            // Create a div element to display the singular values
+            const observationDiv = document.createElement('div');
+            observationDiv.textContent = `Observation ID: ${observationId}, Status: ${status}, Category: ${category}, Notes: ${notes}`;
+
+            // Append the div element to the output
+            output.appendChild(observationDiv);
+        });
+    }
+
+
+
+    const client = new FHIR.client("https://r3.smarthealthit.org");
+    const patientId = "2e27c71e-30c8-4ceb-8c1c-5641e066c0a4";
+    const conditionUrl = `Condition?patient=${patientId}`;
+    const observationUrl = `Observation?patient=${patientId}`;
+    const requestOptions = {
+        headers: {
+            'Origin': 'http://10.17.200.174:8080'
+        }
+    };
+
+    // Fetch condition data and save into response
+    const conditionRequest = client.request(conditionUrl, requestOptions)
+        .then(response => {
+            // Save condition data into a variable
+            window.conditionData = response;
+            return response;
+        })
+        .catch(display);
+
+    // Fetch observation data and save into response
+    const observationRequest = client.request(observationUrl, requestOptions)
+        .then(response => {
+            // Save observation data into a variable
+            window.observationData = response;
+            return response;
+        })
+        .catch(display);
+
+    // Combine the promises to wait for both requests to finish
+    Promise.all([conditionRequest, observationRequest])
+        .then(([conditionResponse, observationResponse]) => {
+            // Display both condition and observation data
+            display(conditionResponse);
+            display(observationResponse);
+        });
+</script>
+</body>
